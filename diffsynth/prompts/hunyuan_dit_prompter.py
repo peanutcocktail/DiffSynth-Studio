@@ -1,6 +1,7 @@
 from .utils import Prompter
 from transformers import BertModel, T5EncoderModel, BertTokenizer, AutoTokenizer
 import warnings
+import torch
 import devicetorch
 DEVICE = devicetorch.get(torch)
 
