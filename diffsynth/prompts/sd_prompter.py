@@ -1,6 +1,9 @@
 from .utils import Prompter, tokenize_long_prompt
 from transformers import CLIPTokenizer
 from ..models import SDTextEncoder
+import torch
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class SDPrompter(Prompter):
@@ -8,7 +11,8 @@ class SDPrompter(Prompter):
         super().__init__()
         self.tokenizer = CLIPTokenizer.from_pretrained(tokenizer_path)
 
-    def encode_prompt(self, text_encoder: SDTextEncoder, prompt, clip_skip=1, device="cuda", positive=True):
+    #def encode_prompt(self, text_encoder: SDTextEncoder, prompt, clip_skip=1, device="cuda", positive=True):
+    def encode_prompt(self, text_encoder: SDTextEncoder, prompt, clip_skip=1, device=DEVICE, positive=True):
         prompt = self.process_prompt(prompt, positive=positive)
         input_ids = tokenize_long_prompt(self.tokenizer, prompt).to(device)
         prompt_emb = text_encoder(input_ids, clip_skip=clip_skip)

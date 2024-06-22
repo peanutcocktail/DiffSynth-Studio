@@ -57,7 +57,8 @@ def release_model():
         del st.session_state["loaded_model_path"]
         del st.session_state["model_manager"]
         del st.session_state["pipeline"]
-        torch.cuda.empty_cache()
+        devicetorch.empty_cache(torch)
+        #torch.cuda.empty_cache()
 
 
 def load_model(model_type, model_path):

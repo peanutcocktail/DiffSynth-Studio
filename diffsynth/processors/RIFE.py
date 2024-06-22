@@ -2,10 +2,13 @@ import torch
 import numpy as np
 from PIL import Image
 from .base import VideoProcessor
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class RIFESmoother(VideoProcessor):
-    def __init__(self, model, device="cuda", scale=1.0, batch_size=4, interpolate=True):
+    #def __init__(self, model, device="cuda", scale=1.0, batch_size=4, interpolate=True):
+    def __init__(self, model, device=DEVICE, scale=1.0, batch_size=4, interpolate=True):
         self.model = model
         self.device = device
 

@@ -1,13 +1,16 @@
 import torch
 from .sd_unet import SDUNetStateDictConverter, SDUNet
 from .sd_text_encoder import SDTextEncoderStateDictConverter, SDTextEncoder
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class SDLoRA:
     def __init__(self):
         pass
 
-    def convert_state_dict(self, state_dict, lora_prefix="lora_unet_", alpha=1.0, device="cuda"):
+    #def convert_state_dict(self, state_dict, lora_prefix="lora_unet_", alpha=1.0, device="cuda"):
+    def convert_state_dict(self, state_dict, lora_prefix="lora_unet_", alpha=1.0, device=DEVICE):
         special_keys = {
             "down.blocks": "down_blocks",
             "up.blocks": "up_blocks",
@@ -26,8 +29,10 @@ class SDLoRA:
                 continue
             if not key.startswith(lora_prefix):
                 continue
-            weight_up = state_dict[key].to(device="cuda", dtype=torch.float16)
-            weight_down = state_dict[key.replace(".lora_up", ".lora_down")].to(device="cuda", dtype=torch.float16)
+            #weight_up = state_dict[key].to(device="cuda", dtype=torch.float16)
+            weight_up = state_dict[key].to(device=DEVICE, dtype=torch.float16)
+            #weight_down = state_dict[key.replace(".lora_up", ".lora_down")].to(device="cuda", dtype=torch.float16)
+            weight_down = state_dict[key.replace(".lora_up", ".lora_down")].to(device=DEVICE, dtype=torch.float16)
             if len(weight_up.shape) == 4:
                 weight_up = weight_up.squeeze(3).squeeze(2).to(torch.float32)
                 weight_down = weight_down.squeeze(3).squeeze(2).to(torch.float32)
@@ -40,7 +45,8 @@ class SDLoRA:
             state_dict_[target_name] = lora_weight.cpu()
         return state_dict_
     
-    def add_lora_to_unet(self, unet: SDUNet, state_dict_lora, alpha=1.0, device="cuda"):
+    #def add_lora_to_unet(self, unet: SDUNet, state_dict_lora, alpha=1.0, device="cuda"):
+    def add_lora_to_unet(self, unet: SDUNet, state_dict_lora, alpha=1.0, device=DEVICE):
         state_dict_unet = unet.state_dict()
         state_dict_lora = self.convert_state_dict(state_dict_lora, lora_prefix="lora_unet_", alpha=alpha, device=device)
         state_dict_lora = SDUNetStateDictConverter().from_diffusers(state_dict_lora)
@@ -49,7 +55,8 @@ class SDLoRA:
                 state_dict_unet[name] += state_dict_lora[name].to(device=device)
             unet.load_state_dict(state_dict_unet)
 
-    def add_lora_to_text_encoder(self, text_encoder: SDTextEncoder, state_dict_lora, alpha=1.0, device="cuda"):
+    #def add_lora_to_text_encoder(self, text_encoder: SDTextEncoder, state_dict_lora, alpha=1.0, device="cuda"):
+    def add_lora_to_text_encoder(self, text_encoder: SDTextEncoder, state_dict_lora, alpha=1.0, device=DEVICE):
         state_dict_text_encoder = text_encoder.state_dict()
         state_dict_lora = self.convert_state_dict(state_dict_lora, lora_prefix="lora_te_", alpha=alpha, device=device)
         state_dict_lora = SDTextEncoderStateDictConverter().from_diffusers(state_dict_lora)

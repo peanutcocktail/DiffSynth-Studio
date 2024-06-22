@@ -9,7 +9,8 @@ import torch
 from tqdm import tqdm
 from PIL import Image
 import numpy as np
-
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class ImageSizeManager:
@@ -124,7 +125,8 @@ class ImageSizeManager:
 
 class HunyuanDiTImagePipeline(torch.nn.Module):
 
-    def __init__(self, device="cuda", torch_dtype=torch.float16):
+    #def __init__(self, device="cuda", torch_dtype=torch.float16):
+    def __init__(self, device=DEVICE, torch_dtype=torch.float16):
         super().__init__()
         self.scheduler = EnhancedDDIMScheduler(prediction_type="v_prediction", beta_start=0.00085, beta_end=0.03)
         self.prompter = HunyuanDiTPrompter()

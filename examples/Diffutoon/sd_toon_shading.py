@@ -1,6 +1,8 @@
 from diffsynth import ModelManager, SDVideoPipeline, ControlNetConfigUnit, VideoData, save_video, save_frames
 from diffsynth.extensions.RIFE import RIFESmoother
 import torch
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 # Download models
@@ -15,7 +17,7 @@ import torch
 
 
 # Load models
-model_manager = ModelManager(torch_dtype=torch.float16, device="cuda")
+model_manager = ModelManager(torch_dtype=torch.float16, device=DEVICE)
 model_manager.load_textual_inversions("models/textual_inversion")
 model_manager.load_models([
     "models/stable_diffusion/flat2DAnimerge_v45Sharp.safetensors",

@@ -10,6 +10,8 @@ import torch, os, json
 from tqdm import tqdm
 from PIL import Image
 import numpy as np
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 def lets_dance_with_long_video(
@@ -25,7 +27,8 @@ def lets_dance_with_long_video(
     unet_batch_size = 1,
     controlnet_batch_size = 1,
     cross_frame_attention = False,
-    device = "cuda",
+    device = DEVICE,
+    #device = "cuda",
     vram_limit_level = 0,
 ):
     num_frames = sample.shape[0]
@@ -63,7 +66,8 @@ def lets_dance_with_long_video(
 
 class SDVideoPipeline(torch.nn.Module):
 
-    def __init__(self, device="cuda", torch_dtype=torch.float16, use_animatediff=True):
+    #def __init__(self, device="cuda", torch_dtype=torch.float16, use_animatediff=True):
+    def __init__(self, device=DEVICE, torch_dtype=torch.float16, use_animatediff=True):
         super().__init__()
         self.scheduler = EnhancedDDIMScheduler(beta_schedule="linear" if use_animatediff else "scaled_linear")
         self.prompter = SDPrompter()

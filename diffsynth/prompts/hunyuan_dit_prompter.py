@@ -1,6 +1,8 @@
 from .utils import Prompter
 from transformers import BertModel, T5EncoderModel, BertTokenizer, AutoTokenizer
 import warnings
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class HunyuanDiTPrompter(Prompter):
@@ -43,7 +45,8 @@ class HunyuanDiTPrompter(Prompter):
         clip_skip=1,
         clip_skip_2=1,
         positive=True,
-        device="cuda"
+        #device="cuda"
+        device=DEVICE
     ):
         prompt = self.process_prompt(prompt, positive=positive)
         

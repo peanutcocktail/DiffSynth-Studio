@@ -28,9 +28,12 @@ from .sdxl_ipadapter import SDXLIpAdapter, IpAdapterXLCLIPImageEmbedder
 from .hunyuan_dit_text_encoder import HunyuanDiTCLIPTextEncoder, HunyuanDiTT5TextEncoder
 from .hunyuan_dit import HunyuanDiT
 
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 class ModelManager:
-    def __init__(self, torch_dtype=torch.float16, device="cuda"):
+    #def __init__(self, torch_dtype=torch.float16, device="cuda"):
+    def __init__(self, torch_dtype=torch.float16, device=DEVICE):
         self.torch_dtype = torch_dtype
         self.device = device
         self.model = {}
@@ -402,7 +405,8 @@ class ModelManager:
                     model.to(device)
             else:
                 self.model[component].to(device)
-        torch.cuda.empty_cache()
+        #torch.cuda.empty_cache()
+        devicetorch.empty_cache(torch)
 
     def get_model_with_model_path(self, model_path):
         for component in self.model_path:

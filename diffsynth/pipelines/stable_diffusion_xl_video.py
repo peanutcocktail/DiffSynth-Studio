@@ -7,11 +7,14 @@ import torch
 from tqdm import tqdm
 from PIL import Image
 import numpy as np
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class SDXLVideoPipeline(torch.nn.Module):
 
-    def __init__(self, device="cuda", torch_dtype=torch.float16, use_animatediff=True):
+    #def __init__(self, device="cuda", torch_dtype=torch.float16, use_animatediff=True):
+    def __init__(self, device=DEVICE, torch_dtype=torch.float16, use_animatediff=True):
         super().__init__()
         self.scheduler = EnhancedDDIMScheduler(beta_schedule="linear" if use_animatediff else "scaled_linear")
         self.prompter = SDXLPrompter()
@@ -126,7 +129,8 @@ class SDXLVideoPipeline(torch.nn.Module):
         if self.motion_modules is None:
             noise = torch.randn((1, 4, height//8, width//8), device="cpu", dtype=self.torch_dtype).repeat(num_frames, 1, 1, 1)
         else:
-            noise = torch.randn((num_frames, 4, height//8, width//8), device="cuda", dtype=self.torch_dtype)
+            #noise = torch.randn((num_frames, 4, height//8, width//8), device="cuda", dtype=self.torch_dtype)
+            noise = torch.randn((num_frames, 4, height//8, width//8), device=DEVICE, dtype=self.torch_dtype)
         if input_frames is None or denoising_strength == 1.0:
             latents = noise
         else:

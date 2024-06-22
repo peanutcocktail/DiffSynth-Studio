@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from PIL import Image
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 def warp(tenInput, tenFlow, device):
@@ -116,7 +118,8 @@ class IFNetStateDictConverter:
 
 
 class RIFEInterpolater:
-    def __init__(self, model, device="cuda"):
+    #def __init__(self, model, device="cuda"):
+    def __init__(self, model, device=DEVICE):
         self.model = model
         self.device = device
         # IFNet only does not support float16
@@ -197,7 +200,8 @@ class RIFEInterpolater:
 
 
 class RIFESmoother(RIFEInterpolater):
-    def __init__(self, model, device="cuda"):
+    #def __init__(self, model, device="cuda"):
+    def __init__(self, model, device=DEVICE):
         super(RIFESmoother, self).__init__(model, device=device)
 
     @staticmethod

@@ -2,6 +2,8 @@ from .utils import Prompter, tokenize_long_prompt
 from transformers import CLIPTokenizer
 from ..models import SDXLTextEncoder, SDXLTextEncoder2
 import torch
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class SDXLPrompter(Prompter):
@@ -22,7 +24,8 @@ class SDXLPrompter(Prompter):
         clip_skip=1,
         clip_skip_2=2,
         positive=True,
-        device="cuda"
+        #device="cuda"
+        device=DEVICE
     ):
         prompt = self.process_prompt(prompt, positive=positive)
         

@@ -3,6 +3,9 @@ st.set_page_config(layout="wide")
 from diffsynth import SDVideoPipelineRunner
 import os
 import numpy as np
+import torch
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 def load_model_list(folder):
@@ -24,7 +27,8 @@ config = {
     "models": {
         "model_list": [],
         "textual_inversion_folder": "models/textual_inversion",
-        "device": "cuda",
+        #"device": "cuda",
+        "device": DEVICE,
         "lora_alphas": [],
         "controlnet_units": []
     },

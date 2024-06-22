@@ -3,6 +3,8 @@ from ..models import SDUNet, SDMotionModel, SDXLUNet, SDXLMotionModel
 from ..models.sd_unet import PushBlock, PopBlock
 from ..controlnets import MultiControlNetManager
 
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 def lets_dance(
     unet: SDUNet,
@@ -19,7 +21,8 @@ def lets_dance(
     tiled=False,
     tile_size=64,
     tile_stride=32,
-    device = "cuda",
+    device = DEVICE,
+#    device = "cuda",
     vram_limit_level = 0,
 ):
     # 1. ControlNet
@@ -129,7 +132,8 @@ def lets_dance_xl(
     tiled=False,
     tile_size=64,
     tile_stride=32,
-    device = "cuda",
+#    device = "cuda",
+    device = DEVICE,
     vram_limit_level = 0,
 ):
     # 2. time

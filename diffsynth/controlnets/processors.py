@@ -1,3 +1,6 @@
+import torch
+import devicetorch
+DEVICE = devicetorch.get(torch)
 from typing_extensions import Literal, TypeAlias
 import warnings
 with warnings.catch_warnings():
@@ -16,15 +19,20 @@ class Annotator:
         if processor_id == "canny":
             self.processor = CannyDetector()
         elif processor_id == "depth":
-            self.processor = MidasDetector.from_pretrained(model_path).to("cuda")
+            #self.processor = MidasDetector.from_pretrained(model_path).to("cuda")
+            self.processor = MidasDetector.from_pretrained(model_path).to(DEVICE)
         elif processor_id == "softedge":
-            self.processor = HEDdetector.from_pretrained(model_path).to("cuda")
+            #self.processor = HEDdetector.from_pretrained(model_path).to("cuda")
+            self.processor = HEDdetector.from_pretrained(model_path).to(DEVICE)
         elif processor_id == "lineart":
-            self.processor = LineartDetector.from_pretrained(model_path).to("cuda")
+            #self.processor = LineartDetector.from_pretrained(model_path).to("cuda")
+            self.processor = LineartDetector.from_pretrained(model_path).to(DEVICE)
         elif processor_id == "lineart_anime":
-            self.processor = LineartAnimeDetector.from_pretrained(model_path).to("cuda")
+            #self.processor = LineartAnimeDetector.from_pretrained(model_path).to("cuda")
+            self.processor = LineartAnimeDetector.from_pretrained(model_path).to(DEVICE)
         elif processor_id == "openpose":
-            self.processor = OpenposeDetector.from_pretrained(model_path).to("cuda")
+            #self.processor = OpenposeDetector.from_pretrained(model_path).to("cuda")
+            self.processor = OpenposeDetector.from_pretrained(model_path).to(DEVICE)
         elif processor_id == "tile":
             self.processor = None
         else:

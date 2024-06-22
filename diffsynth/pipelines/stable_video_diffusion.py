@@ -5,12 +5,14 @@ from tqdm import tqdm
 from PIL import Image
 import numpy as np
 from einops import rearrange, repeat
-
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 class SVDVideoPipeline(torch.nn.Module):
 
-    def __init__(self, device="cuda", torch_dtype=torch.float16):
+    #def __init__(self, device="cuda", torch_dtype=torch.float16):
+    def __init__(self, device=DEVICE, torch_dtype=torch.float16):
         super().__init__()
         self.scheduler = ContinuousODEScheduler()
         self.device = device
