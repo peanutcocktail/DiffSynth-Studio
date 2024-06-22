@@ -1,6 +1,8 @@
 from diffsynth import save_video, ModelManager, SVDVideoPipeline, HunyuanDiTImagePipeline
 from diffsynth import ModelManager
 import torch, os
+import devicetorch
+DEVICE = devicetorch.get(torch)
 
 
 # Download models (from Huggingface)
@@ -30,7 +32,8 @@ import torch, os
 def generate_image():
     # Load models
     os.environ["TOKENIZERS_PARALLELISM"] = "True"
-    model_manager = ModelManager(torch_dtype=torch.float16, device="cuda")
+    model_manager = ModelManager(torch_dtype=torch.float16, device=DEVICE)
+    #model_manager = ModelManager(torch_dtype=torch.float16, device="cuda")
     model_manager.load_models([
         "models/HunyuanDiT/t2i/clip_text_encoder/pytorch_model.bin",
         "models/HunyuanDiT/t2i/mt5/pytorch_model.bin",
@@ -51,7 +54,8 @@ def generate_image():
 
 def generate_video(image):
     # Load models
-    model_manager = ModelManager(torch_dtype=torch.float16, device="cuda")
+    #model_manager = ModelManager(torch_dtype=torch.float16, device="cuda")
+    model_manager = ModelManager(torch_dtype=torch.float16, device=DEVICE)
     model_manager.load_models([
         "models/stable_video_diffusion/svd_xt.safetensors",
         "models/stable_video_diffusion/model.fp16.safetensors"
@@ -72,7 +76,8 @@ def generate_video(image):
 
 def upscale_video(image, video):
     # Load models
-    model_manager = ModelManager(torch_dtype=torch.float16, device="cuda")
+    #model_manager = ModelManager(torch_dtype=torch.float16, device="cuda")
+    model_manager = ModelManager(torch_dtype=torch.float16, device=DEVICE)
     model_manager.load_models([
         "models/stable_video_diffusion/svd_xt.safetensors",
         "models/stable_video_diffusion/model.fp16.safetensors",
