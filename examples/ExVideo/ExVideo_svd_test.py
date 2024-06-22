@@ -1,6 +1,7 @@
 from diffsynth import save_video, ModelManager, SVDVideoPipeline, HunyuanDiTImagePipeline
 from diffsynth import ModelManager
 import torch, os
+from PIL import Image
 import devicetorch
 DEVICE = devicetorch.get(torch)
 
@@ -100,8 +101,10 @@ def upscale_video(image, video):
 # We use Hunyuan DiT to generate the first frame.
 # If you want to use your own image,
 # please use `image = Image.open("your_image_file.png")` to replace the following code.
-image = generate_image()
-image.save("image.png")
+
+#image = generate_image()
+#image.save("image.png")
+image = Image.open(os.path.abspath("examples/ExVideo/img.jpg"))
 
 # Now, generate a video with resolution of 512.
 video = generate_video(image)
